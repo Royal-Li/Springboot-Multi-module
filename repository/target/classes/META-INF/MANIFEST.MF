@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: repository
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: qs016
+Implementation-Vendor-Id: com.kegao.lzs
+Build-Jdk: 1.8.0_181
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/springboot-shiro-thymeleaf-bootstrap/repository
+Created-By: Maven Integration for Eclipse
+

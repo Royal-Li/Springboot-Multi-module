@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- s项目说明：这里作为聚合工程的父工程 -->
+	<groupId>com.kegao.lzs</groupId>
+	<artifactId>springboot-shiro-thymeleaf-bootstrap</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<description>实现权限控制 +动态菜单</description>
+
+	<!-- s继承说明：这里继承SpringBoot提供的父工程 -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.1.RELEASE</version>
+	</parent>
+
+	<!-- s模块说明：这里声明多个子模块 -->
+	<modules>
+		<module>../web2</module>
+		<module>service</module>
+		<module>entity</module>
+		<module>web</module>
+		<module>repository</module>
+	</modules>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+
+
+	<!-- 1在父工程的pom文件中，定义jar包的版本。 后续子工程继承父工程时，就可以不需要在写版本号了！！！ 注意：父工程中的jar包，在子工程中未必会全部用到。用哪些时再做引用，这个会在后面的项目中体现； 
+		后续子工程需要添加新的jar包时，可以在父工程中增加。这里给出一部分主要的jar包及版本； -->
+
+	<!-- 1集中定义依赖版本号 -->
+	<!-- springboot项目不用集中定义版本号  在继承SpringBoot提供的父工程里面 已经定义了版本号 -->
+
+	<!-- 2只定义依赖的版本，并不实际依赖 -->
+
+
+	<dependencies>
+		<!-- s只需引入spring-boot-devtools 即可实现热部署 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

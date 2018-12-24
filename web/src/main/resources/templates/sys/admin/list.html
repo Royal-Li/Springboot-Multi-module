@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" />
+<link th:href="@{/plugs/bootstrap-table/bootstrap-table.css}" rel="stylesheet" type="text/css" />
+<!-- <script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script> -->
+<script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.js}"></script>
+<script type="text/javascript" th:src="@{/plugs/bootstrap-table/bootstrap-table.js}"></script>
+<script type="text/javascript" th:src="@{/plugs/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+<script type="text/javascript" th:src="@{/plugs/distpicker/distpicker.data.js}"></script>
+<script type="text/javascript" th:src="@{/plugs/distpicker/distpicker.js}"></script>
+</head>
+<body>
+<div id="toolbar">
+  <div class="form-inline" role="form" id="distpicker" data-toggle="distpicker">
+   <div class="form-group">
+      <span th:text="省"> </span>
+      <select name="province" class="form-control w70" value=""></select>
+    </div>
+    <div class="form-group">
+      <span th:text="市"> </span>
+      <select name="city" class="form-control w70" value=""></select>
+    </div>
+    <div class="form-group">
+      <span th:text="区"> </span>
+      <select name="area" class="form-control w70"  value=""></select>
+    </div>
+    <div class="form-group">
+      <input name="search" class="form-control" type="text" placeholder="Search">
+    </div>
+    <button id="ok" type="submit" class="btn btn-primary">OK</button>
+  </div>
+</div>
+<!--   data-response-handler="responseHandler" data-search="true" data-query-params="queryParams"-->
+<table
+  id="table"
+  data-toggle="table"
+  data-toolbar="#toolbar"
+  data-detail-view="true"
+  data-detail-formatter="detailFormatter"
+  data-show-refresh="true"
+  data-show-toggle="true"
+  data-show-columns="true"
+  data-query-params="queryParams"
+  data-url="getAdmin"
+  data-pagination="true"
+  data-side-pagination="server"
+  data-page-list="[5, 10, 20, 50, 100, 200]"
+  >
+ <thead>
+    <tr>
+   	  <th data-field="state" data-checkbox="true"></th>
+      <th data-field="id">ID</th>
+      <th data-field="name">Item Name</th>
+      <th data-field="mobile">Item Name</th>
+      <th data-field="email">Item Name</th>
+      <th data-field="createDate">Item Name</th>
+      <th data-field="updateDate">Item Name</th>
+      <th data-field="operate" data-events="window.operateEvents" data-formatter="operateFormatter">Item Operate</th>
+    </tr>
+  </thead>
+</table>
+
+<script>
+  var $table = $('#table')
+  var $ok = $('#ok')
+	 $ok.on('click', function(){
+		   //alert(11111111)
+		$table.bootstrapTable('refresh')
+	});
+  // Here the mounted function is same as $(function() {})
+  function mounted() {
+    $ok.click(function () {
+    	debugger;
+     // $table.bootstrapTable('refresh')
+      initTable()
+    })
+  }
+
+  function queryParams(params) {
+   	// s如果想自定义一个参数列表 可以初始化 ，这里不用初始化 因为添加了分页
+	  /* var params = {} */
+    $('#toolbar').find('input[name],select[name]').each(function () {
+    	//alert($(this).attr('name')+"|"+$(this).val())
+      params[$(this).attr('name')] = $(this).val()
+    })
+    return params
+  }
+
+  function responseHandler(res) {
+    return res.rows
+  }
+  function detailFormatter(index, row) {
+	    var html = []
+	    $.each(row, function (key, value) {
+	      html.push('<p><b>' + key + ':</b> ' + value + '</p>')
+	    })
+	    return html.join('')
+	  }
+  function operateFormatter(value, row, index) {
+	    return [
+	      '<a class="like" href="javascript:void(0)" title="Like">',
+	      '<i class="glyphicon glyphicon-heart"></i>',
+	      '</a>  ',
+	      '<a class="remove" href="javascript:void(0)" title="Remove">',
+	      '<i class="glyphicon glyphicon-remove"></i>',
+	      '</a>',
+	      '<button  type="submit" id="search" class="edit btn btn-warning btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 修改</button>',
+	      '<button  type="submit" id="search" class="edit btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除</button>',
+	    ].join('')
+	  }
+
+	  window.operateEvents = {
+	  	'click .edit': function (e, value, row, index) {
+	      alert(e+"|"+value+"|"+row+"|"+row.id+"|"+index+"|")
+	      $table.bootstrapTable('refresh')
+	    },
+	    'click .like': function (e, value, row, index) {
+	      alert('You click like action, row: ' + JSON.stringify(row))
+	    },
+	    'click .remove': function (e, value, row, index) {
+	      if (confirm("确认删除吗")){
+	    	  $table.bootstrapTable('remove', {
+	  	        field: 'id',
+	  	        values: [row.id]
+	  	      })
+	      }
+	      
+	    }
+	  }
+	 
+</script>
+
+</body>
+</html>
