@@ -24,6 +24,7 @@
 		<module>entity</module>
 		<module>web</module>
 		<module>repository</module>
+		<module>web3</module>
 	</modules>
 
 	<properties>
@@ -36,10 +37,11 @@
 		后续子工程需要添加新的jar包时，可以在父工程中增加。这里给出一部分主要的jar包及版本； -->
 
 	<!-- 1集中定义依赖版本号 -->
-	<!-- springboot项目不用集中定义版本号  在继承SpringBoot提供的父工程里面 已经定义了版本号 -->
+	<!-- springboot项目不用集中定义版本号 在继承SpringBoot提供的父工程里面 已经定义了版本号 -->
 
 	<!-- 2只定义依赖的版本，并不实际依赖 -->
 
+	<!-- Spring Boot默认使用LogBack日志系统，如果不需要更改为其他日志系统如Log4j2等，则无需多余的配置，LogBack默认将日志打印到控制台上。 -->
 
 	<dependencies>
 		<!-- s只需引入spring-boot-devtools 即可实现热部署 -->
@@ -48,10 +50,18 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- springboot 测试 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- springboot JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- springboot thymeleaf -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -60,24 +70,67 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<!-- mysql -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- s部署到tomcat中需要使用 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- springboot aop 日志处理？？？？？？ -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+		<!-- s缓存 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		
+		<!--s 因为每个实体类都应该包含getter和setter方法才有意义。但是getter和setter方法的代码过于冗余， 属于模板类型代码，影响代码阅读。 
+			@Setter和@Getter两个注解是属于[lombok][6]的，在pom.xml文件中添加依赖引入lombok： -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+		<!-- IO包 -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<!-- lang包 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<!-- s上传excel 依赖 -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<!-- shiro spring支持 -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -86,5 +139,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>
