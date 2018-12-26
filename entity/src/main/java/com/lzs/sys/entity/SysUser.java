@@ -14,20 +14,24 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name="sys_user")
 public class SysUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
-	private int id;
+	private Integer id;
 	@Column(name = "user_name")
 	private String name;
 	private String email;
-	private int mobile;
+	private Integer mobile;
 	private String password;
 	private String remake;
 	private String createDate;
@@ -36,6 +40,7 @@ public class SysUser {
 	@ManyToMany(cascade=CascadeType.PERSIST)
 	@JoinTable(name = "sys_user_role",joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "user_id")},
 	inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "role_id")})
+	@JsonIgnoreProperties(value = { "users" })
 	private List<SysRole> roles = new ArrayList<>();
 
 }

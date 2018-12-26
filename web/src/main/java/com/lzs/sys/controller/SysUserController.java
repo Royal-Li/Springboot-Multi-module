@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,7 @@ public class SysUserController {
 		
 	}
 	
-	
+	@RequiresPermissions(value= {"user:manager"})
 	@ResponseBody
 	@RequestMapping("/getAdmin")
 	public Map<String, Object> getAdmin(@RequestParam(value="search")String search, 

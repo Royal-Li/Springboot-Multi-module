@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="utf-8">
@@ -8,11 +8,12 @@
     <title> - 登录</title>
     <meta name="keywords" content="">
     <meta name="description" content="">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/login.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css?v=4.4.0}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
     <!--[if lt IE 9]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
@@ -20,6 +21,11 @@
         if (window.top !== window.self) {
             window.top.location = window.location;
         }
+        $(function(){
+        	$("#btn_login").on('click',function(){
+        		$("#form_login").submit();
+        	})
+        })
     </script>
 
 </head>
@@ -28,13 +34,13 @@
     <div class="signinpanel">
         <div class="row">
             <div class="col-sm-12">
-                <form method="post" action="index.html">
+                <form method="post" action="login" id="form_login">
                     <h4 class="no-margins">登录：</h4>
                     <p class="m-t-md">登录到H+后台主题UI框架</p>
-                    <input type="text" class="form-control uname" placeholder="用户名" />
-                    <input type="password" class="form-control pword m-b" placeholder="密码" />
+                    <input type="text" class="form-control uname" placeholder="用户名" th:name="username" />
+                    <input type="password" class="form-control pword m-b" placeholder="密码" th:name="password"/>
                     <a href="">忘记密码了？</a>
-                    <button class="btn btn-success btn-block">登录</button>
+                    <button th:id="btn_login" class="btn btn-success btn-block">登录</button>
                 </form>
             </div>
         </div>
