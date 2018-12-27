@@ -6,7 +6,7 @@ import com.lzs.sys.entity.SysUser;
 
 public interface SysUserService {
 
-	Page<SysUser> getAllAdmin(String order, Integer offset, Integer pageSize);
+	Page<SysUser> getAllAdmin(SysUser user, String order, Integer offset, Integer pageSize);
 
 	void add(SysUser user1);
 

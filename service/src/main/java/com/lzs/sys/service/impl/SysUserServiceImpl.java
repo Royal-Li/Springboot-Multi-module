@@ -1,8 +1,11 @@
 package com.lzs.sys.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lzs.sys.entity.SysResource;
+import com.lzs.sys.entity.SysRole;
 import com.lzs.sys.entity.SysUser;
 import com.lzs.sys.repository.SysUserRepository;
 import com.lzs.sys.service.SysUserService;
@@ -29,12 +34,16 @@ public class SysUserServiceImpl implements SysUserService {
 	
 
 	@Override
-	public Page<SysUser> getAllAdmin(String order, Integer offset, Integer pageSize) {
+	public Page<SysUser> getAllAdmin(SysUser user, String order, Integer offset, Integer pageSize) {
+		
+		// JPA实例查询
+		ExampleMatcher matcher =ExampleMatcher.matching().withIgnoreCase("roles");
+		Example<SysUser> example = Example.of(user, matcher);
 		
 		int pageNum = offset/pageSize;
 		Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.ASC,"id");
 		
-		return sysUserRepository.findAll(pageable);
+		return sysUserRepository.findAll(example,pageable);
 	}
 
 

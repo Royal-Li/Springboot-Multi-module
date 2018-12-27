@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -35,7 +36,7 @@ public class SysResource {
 	private String description;		//s描述
 	private String createDate;
 	private String updateDate;
-	
+	/*@Transient  此注解表示该属性并非是一个要映射到数据库表中的字段,只是起辅助作用.ORM框架将会忽略该属性*/
 	@ManyToMany(mappedBy = "resources")
 	@JsonIgnoreProperties(value = { "resources" })
 	private List<SysRole> roles = new ArrayList<>();
