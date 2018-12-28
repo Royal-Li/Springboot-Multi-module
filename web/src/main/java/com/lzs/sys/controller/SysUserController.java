@@ -25,7 +25,7 @@ import com.lzs.sys.service.SysUserService;
  * @date Dec 17, 2018 3:55:56 PM
  */
 @Controller
-@RequestMapping(value="/admin")
+@RequestMapping(value="/user")
 public class SysUserController {
 
 	@Autowired
@@ -35,7 +35,7 @@ public class SysUserController {
 	
 	@RequestMapping("/index")
 	public ModelAndView index(ModelAndView model) {
-		model.setViewName("/admin/list");
+		model.setViewName("/user/list");
 		return model;
 		
 	}
@@ -51,7 +51,6 @@ public class SysUserController {
 	 * @param request
 	 * @return
 	 */
-	@RequiresPermissions(value= {"user:manager"})
 	@ResponseBody
 	@RequestMapping("/getAdmin")
 	public Map<String, Object> getAdmin(@RequestParam(value="search")String search, SysUser user,
@@ -67,6 +66,13 @@ public class SysUserController {
 		response.put("rows", page.getContent());
 		return response;
 		
+	}
+	
+	@ResponseBody
+	@RequestMapping("/error")
+	public void addUser() {
+		int a = 1/0;
+		System.out.println("这是一个错误");
 	}
 	
 	

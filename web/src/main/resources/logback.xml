@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- s级别从高到低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+<!-- s日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+<!-- s以下 每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志 -->
+<!-- scan 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 -->
+<!-- scanPeriod 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="60 seconds"
+	debug="false">
+
+	<!-- s动态日志级别 -->
+	<jmxConfigurator />
+
+	<!-- s定义日志文件 输出位置  读取logging.path-->
+	<property name="log.home_dir"
+		value="${LOG_PATH}" />
+
+	<!--s 日志最大的历史 365天 -->
+	<property name="log.maxHistory" value="365" />
+
+	<property name="log.level" value="info" />
+
+	<!-- ConsoleAppender 控制台输出日志 -->
+	<appender name="console"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				<!--s格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+				[%thread] %-5level - %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ERROR级别日志 -->
+	<!-- s滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件 RollingFileAppender -->
+	<appender name="ERROR"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- s过滤器，只记录Error级别的日志 -->
+		<!-- s果日志级别等于配置级别，过滤器会根据onMath 和 onMismatch接收或拒绝日志。 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<!--s 设置过滤级别 -->
+			<level>ERROR</level>
+			<!-- s用于配置符合过滤条件的操作 -->
+			<onMatch>ACCEPT</onMatch>
+			<!--s用于配置不符合过滤条件的操作 -->
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<!-- s最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责触发滚动 -->
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--s日志输出位置 可以是相对和绝对路径 -->
+			<fileNamePattern>
+				${log.home_dir}/error/%d{yyyy-MM-dd}/error-%i.log
+			</fileNamePattern>
+			<!-- s可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件假设设置每个月滚动，且<maxHistory>是6， 则只保存最近6个月的文件，删除之前的旧文件。注意，删除旧文件是，那些为了归档而创建的目录也会被删除 -->
+			<maxHistory>${log.maxHistory}</maxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!--s单个log文件超过该大小就会重新建一个log文件 -->
+				<MaxFileSize>2MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>
+				<!-- s设置日志输出格式 -->
+				<!-- %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n -->
+				%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- WARN级别日志 appender -->
+	<appender name="WARN"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- s过滤器，只记录WARN级别的日志 -->
+		<!-- s果日志级别等于配置级别，过滤器会根据onMath 和 onMismatch接收或拒绝日志。 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<!-- 设置过滤级别 -->
+			<level>WARN</level>
+			<!-- 用于配置符合过滤条件的操作 -->
+			<onMatch>ACCEPT</onMatch>
+			<!-- s用于配置不符合过滤条件的操作 -->
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--s日志输出位置 可相对、和绝对路径 -->
+			<fileNamePattern>${log.home_dir}/warn/%d{yyyy-MM-dd}/warn-%i.log
+			</fileNamePattern>
+			<maxHistory>${log.maxHistory}</maxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>2MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -
+				%msg%n</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- INFO级别日志 appender -->
+	<appender name="INFO"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.home_dir}/info/%d{yyyy-MM-dd}/info-%i.log
+			</fileNamePattern>
+			<maxHistory>${log.maxHistory}</maxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>2MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- DEBUG级别日志 appender -->
+	<appender name="DEBUG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.home_dir}/debug/%d{yyyy-MM-dd}/debug-%i.log
+			</fileNamePattern>
+			<maxHistory>${log.maxHistory}</maxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>2MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- TRACE级别日志 appender -->
+	<appender name="TRACE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>TRACE</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.home_dir}/trace/%d{yyyy-MM-dd}/trace-%i.log
+			</fileNamePattern>
+			<maxHistory>${log.maxHistory}</maxHistory>
+			<TimeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<MaxFileSize>2MB</MaxFileSize>
+			</TimeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!--=============================== s日志输出: 默认主业务日志 ====================================== -->
+	<!-- <logger name="org.springframework">
+		<level value="WARN" />
+	</logger>
+	<logger name="org.apache.shiro">
+		<level value="WARN" />
+	</logger>
+	<logger name="freemarker">
+		<level value="WARN" />
+	</logger>
+	<logger name="org.hibernate">
+		<level value="WARN" />
+	</logger>
+	<logger name="org.hibernate.SQL">
+		<level value="DEBUG" />
+	</logger> -->
+
+	<!-- root级别 DEBUG -->
+	<root>
+		<!-- s打印debug级别日志及以上级别日志 -->
+		<level value="${log.level}" />
+		<!-- s控制台输出 根据appeder name -->
+		<appender-ref ref="console" />
+		<!-- s文件输出 根据appeder name -->
+		<appender-ref ref="ERROR" />
+		<appender-ref ref="INFO" />
+		<appender-ref ref="WARN" />
+		<appender-ref ref="DEBUG" />
+		<appender-ref ref="TRACE" />
+	</root>
+</configuration>
