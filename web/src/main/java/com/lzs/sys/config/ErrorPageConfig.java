@@ -17,10 +17,10 @@ public class ErrorPageConfig  {
 	@Bean
 	public ConfigurableServletWebServerFactory webServerFactory() {
 		TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
-		// ???? 为什么设置成 /404 每次执行一次别的请求 都会定向到/404？？？？、
+		// ???? 为什么设置成 /404 每次执行一次别的正常的请求 都会定向到/404
 		//factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404"));
 		factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404.html"));
-		factory.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500"));
+		factory.addErrorPages(new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500.html"));
 		return factory;
 	}
 	/*@Bean

@@ -1,5 +1,6 @@
 package com.lzs.sys.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="sys_resource")
-public class SysResource {
+public class SysResource  implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="resource_id")

@@ -1,5 +1,6 @@
 package com.lzs.sys.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name="sys_role")
-public class SysRole {
+public class SysRole  implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="role_id")

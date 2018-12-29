@@ -34,10 +34,10 @@ public class SysUserController {
 	SysRoleService sysRoleService;
 	
 	@RequestMapping("/index")
-	public ModelAndView index(ModelAndView model) {
+	public ModelAndView sysUserHtml(ModelAndView model) {
+		
 		model.setViewName("/user/list");
 		return model;
-		
 	}
 	
 	/**
@@ -51,6 +51,7 @@ public class SysUserController {
 	 * @param request
 	 * @return
 	 */
+	@RequiresPermissions(value= {"user:manager"})
 	@ResponseBody
 	@RequestMapping("/getAdmin")
 	public Map<String, Object> getAdmin(@RequestParam(value="search")String search, SysUser user,
@@ -66,13 +67,6 @@ public class SysUserController {
 		response.put("rows", page.getContent());
 		return response;
 		
-	}
-	
-	@ResponseBody
-	@RequestMapping("/error")
-	public void addUser() {
-		int a = 1/0;
-		System.out.println("这是一个错误");
 	}
 	
 	

@@ -84,7 +84,7 @@ public class AopSysLog {
 			params += entry.getKey() + " : " + innerParams;
 		}
 		/*SysUser loginUser = (SysUser) SecurityUtils.getSubject().getPrincipal();*/
-		SysUser loginUser = (SysUser) request.getSession().getAttribute("ADMIN");
+		SysUser loginUser = (SysUser) request.getSession().getAttribute("LoginUser");
 		Long operationId = (long) (loginUser != null ? loginUser.getId() : 0);
 		logger.info("args: " + params);
 		logger.info("opration id: " + operationId);
