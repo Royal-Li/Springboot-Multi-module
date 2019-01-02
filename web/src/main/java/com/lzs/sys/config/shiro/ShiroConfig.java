@@ -10,6 +10,7 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -34,14 +35,13 @@ public class ShiroConfig {
 	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
-		
-		//自定义拦截器限制并发人数,参考博客 
-		LinkedHashMap<String, Filter> filtersMap = new LinkedHashMap<>(); 
-		//限制同一帐号同时在线的个数 
-		filtersMap.put("kickout", kickoutSessionControlFilter()); 
+
+		// 自定义拦截器限制并发人数,参考博客
+		LinkedHashMap<String, Filter> filtersMap = new LinkedHashMap<>();
+		// 限制同一帐号同时在线的个数
+		filtersMap.put("kickout", kickoutSessionControlFilter());
 		shiroFilterFactoryBean.setFilters(filtersMap);
-		
-		
+
 		// s拦截器.
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 		// s设置静态资源文件可访问
@@ -64,7 +64,7 @@ public class ShiroConfig {
 //        s过滤链定义，从上向下顺序执行，一般将/**放在最为下边 :这是一个坑呢，一不小心代码就不好使了;
 //        authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
 		filterChainDefinitionMap.put("/*", "authc");
-		//filterChainDefinitionMap.put("/**", "authc");
+		// filterChainDefinitionMap.put("/**", "authc");
 		filterChainDefinitionMap.put("/*.*", "authc");
 		// 其他资源都需要认证 authc表示需要认证才能进行访问 user表示配置记住我或认证通过可以访问的地址
 		// filterChainDefinitionMap.put("/**", "kickout,user"); 表示 访问/**下的资源 首先要通过
@@ -82,31 +82,12 @@ public class ShiroConfig {
 		return shiroFilterFactoryBean;
 	}
 
-	@Bean
-	public SecurityManager securityManager() {
-		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		securityManager.setRealm(myShiroRealm());
-		// s自定义cacheManager
-		securityManager.setCacheManager(ehCacheManager());
-		// s自定义sessionManager
-		securityManager.setSessionManager(sessionManager());
-		return securityManager;
-	}
-
 	// s身份认证realm
 	@Bean
 	public MyShiroRealm myShiroRealm() {
 		MyShiroRealm myShiroRealm = new MyShiroRealm();
 		myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
 		return myShiroRealm;
-	}
-
-	// s开启shiro aop注解支持.
-	@Bean
-	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-		AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-		authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-		return authorizationAttributeSourceAdvisor;
 	}
 
 	@Bean
@@ -118,7 +99,7 @@ public class ShiroConfig {
 		credentialsMatcher.setHashIterations(1);
 		return credentialsMatcher;
 	}
-
+	
 	/**
 	 * @Description 开启缓存 shiro cache实现
 	 * @author Jason
@@ -132,12 +113,49 @@ public class ShiroConfig {
 		return ehCacheManager;
 	}
 
-	/** 
-	 * @Description 自定义session 管理
-	 * a. AbstractSessionDAO提供了SessionDAO的基础实现，如生成会话ID等；  
-	   b. CachingSessionDAO提供了对开发者透明的会话缓存的功能，只需要设置相应的CacheManager即可；  
-	   c. MemorySessionDAO直接在内存中进行会话维护；  
-	   d. EnterpriseCacheSessionDAO提供了缓存功能的会话维护，默认情况下使用MapCache实现，内部使用ConcurrentHashMap保存缓存的会话。
+	/**
+	 * 身份认证realm; (这个需要自己写，账号密码校验；权限等)
+	 * 
+	 * @return
+	 */
+	@Bean
+	public MyShiroRealm shiroRealm() {
+		MyShiroRealm myShiroRealm = new MyShiroRealm();
+		myShiroRealm.setCachingEnabled(true);
+		// 启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
+		myShiroRealm.setAuthenticationCachingEnabled(true);
+		// 缓存AuthenticationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
+		myShiroRealm.setAuthenticationCacheName("authenticationCache");
+		// 启用授权缓存，即缓存AuthorizationInfo信息，默认false
+		myShiroRealm.setAuthorizationCachingEnabled(true);
+		// 缓存AuthorizationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
+		myShiroRealm.setAuthorizationCacheName("authorizationCache");
+		return myShiroRealm;
+	}
+	
+	/**
+	 * SessionDAO的作用是为Session提供CRUD并进行持久化的一个shiro组件
+	 * MemorySessionDAO 直接在内存中进行会话维护
+	 * EnterpriseCacheSessionDAO  提供了缓存功能的会话维护，默认情况下使用MapCache实现，内部使用ConcurrentHashMap保存缓存的会话。
+	 * @return
+	 */
+	@Bean
+	public SessionDAO sessionDAO() {
+	    EnterpriseCacheSessionDAO enterpriseCacheSessionDAO = new EnterpriseCacheSessionDAO();
+	    //使用ehCacheManager
+	    enterpriseCacheSessionDAO.setCacheManager(ehCacheManager());
+	    //设置session缓存的名字 默认为 shiro-activeSessionCache
+	    enterpriseCacheSessionDAO.setActiveSessionsCacheName("shiro-activeSessionCache");
+	   /* //sessionId生成器
+	    enterpriseCacheSessionDAO.setSessionIdGenerator(sessionIdGenerator());*/
+	    return enterpriseCacheSessionDAO;
+	}
+	
+	/**
+	 * @Description 自定义session 管理 a. AbstractSessionDAO提供了SessionDAO的基础实现，如生成会话ID等；
+	 *              b. CachingSessionDAO提供了对开发者透明的会话缓存的功能，只需要设置相应的CacheManager即可； c.
+	 *              MemorySessionDAO直接在内存中进行会话维护； d.
+	 *              EnterpriseCacheSessionDAO提供了缓存功能的会话维护，默认情况下使用MapCache实现，内部使用ConcurrentHashMap保存缓存的会话。
 	 * @author Jason
 	 * @date Dec 29, 2018
 	 * @return
@@ -146,7 +164,33 @@ public class ShiroConfig {
 	public SessionManager sessionManager() {
 		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
 		sessionManager.setSessionDAO(new EnterpriseCacheSessionDAO());
+		sessionManager.setCacheManager(ehCacheManager());
 		return sessionManager;
+	}
+
+	/**
+	 * @Description s配置核心安全事务管理器
+	 * @author Jason
+	 * @date Jan 2, 2019
+	 * @return
+	 */
+	@Bean
+	public SecurityManager securityManager() {
+		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+		securityManager.setRealm(myShiroRealm());
+		// s自定义cacheManager
+		securityManager.setCacheManager(ehCacheManager());
+		// s自定义sessionManager
+		securityManager.setSessionManager(sessionManager());
+		return securityManager;
+	}
+
+	// s开启shiro aop注解支持.
+	@Bean
+	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+		AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+		authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+		return authorizationAttributeSourceAdvisor;
 	}
 
 	/**

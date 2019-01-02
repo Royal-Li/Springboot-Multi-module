@@ -6,7 +6,9 @@
 	下面的参数这样解释：
 	user.home – 用户主目录
 	user.dir      – 用户当前工作目录
-	java.io.tmpdir – 默认临时文件路径 -->
+	java.io.tmpdir – 默认临时文件路径 
+	绝对路径（如：d:\\ehcache）
+          查看路径方法：String tmpDir = System.getProperty("java.io.tmpdir");-->
     <diskStore path="java.io.tmpdir"/>
 
     <!--
@@ -22,7 +24,7 @@
        overflowToDisk：当内存中对象数量达到maxElementsInMemory时，Ehcache将会对象写到磁盘中。
        diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB。每个Cache都应该有自己的一个缓冲区。
        maxElementsOnDisk：硬盘最大缓存个数。
-       diskPersistent：是否缓存虚拟机重启期数据 Whether the disk store persists between restarts of the Virtual Machine. The default value is false.
+       diskPersistent：是否缓存虚拟机重启期数据 （Server重启时将缓存序列化到本地，后再加载，保证缓存在重启后依然有效）。
        diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认是120秒。
        memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。
        Ehcache的三种清空策略;
@@ -33,23 +35,22 @@
     -->
 
     <defaultCache
-            maxElementsInMemory="10000"
+           
             eternal="false"
             timeToIdleSeconds="120"
             timeToLiveSeconds="120"
             overflowToDisk="true"
             maxElementsOnDisk="10000000"
-            diskPersistent="true"
+            diskPersistent="false"
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LRU"
     />
     <cache name="resourceCache"
-           maxEntriesLocalHeap="10000"
-           maxEntriesLocalDisk="1000"
+           maxElementsInMemory="10000"
            eternal="false"
            overflowToDisk="true"
            diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300"
+           timeToIdleSeconds="120"
            timeToLiveSeconds="600"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off"
@@ -60,5 +61,25 @@
 		   overflowToDisk="true"
 		   timeToIdleSeconds="0"
 		   timeToLiveSeconds="0"/>
+		   
+	 <!-- 授权缓存 -->
+    <cache name="authorizationCache"
+           
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           statistics="true">
+    </cache>
+
+    <!-- 认证缓存 -->
+    <cache name="authenticationCache"
+           
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="0"
+           overflowToDisk="false"
+           statistics="true">
+    </cache>
 
 </ehcache>

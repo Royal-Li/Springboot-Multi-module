@@ -1,55 +1,63 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-    <title> - 登录</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/font-awesome.css?v=4.4.0}" rel="stylesheet">
-    <link th:href="@{/css/animate.css}" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet">
-    <link th:href="@{/css/login.css}" rel="stylesheet">
-    <script type="text/javascript" th:src="@{/js/jquery.js}"></script>
-    <!--[if lt IE 9]>
+<title>- 登录</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.css?v=4.4.0}" rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/css/login.css}" rel="stylesheet">
+<script type="text/javascript" th:src="@{/js/jquery.js}"></script>
+<!--[if lt IE 9]>
     <meta http-equiv="refresh" content="0;ie.html" />
     <![endif]-->
-    <script>
-        if (window.top !== window.self) {
-            window.top.location = window.location;
-        }
-        $(function(){
-        	$("#btn_login").on('click',function(){
-        		$("#form_login").submit();
-        	})
-        })
-    </script>
+<script>
+	function kickout() {
+		var href = location.href;
+		if (href.indexOf("kickout") > 0) {
+			alert("您的账号在另一台设备上登录,如非本人操作，请立即修改密码！");
+		}
+	}
+	window.onload = kickout();
+
+	if (window.top !== window.self) {
+		window.top.location = window.location;
+	}
+	$(function() {
+		$("#btn_login").on('click', function() {
+			$("#form_login").submit();
+		})
+	})
+</script>
 
 </head>
 
 <body class="signin">
-    <div class="signinpanel">
-        <div class="row">
-            <div class="col-sm-12">
-                <form method="post" action="login" id="form_login">
-                    <h4 class="no-margins">登录：</h4>
-                    <p class="m-t-md">登录到H+后台主题UI框架</p>
-                    <input type="text" class="form-control uname" placeholder="用户名" th:name="username" />
-                    <input type="password" class="form-control pword m-b" placeholder="密码" th:name="password"/>
-                    <a href="">忘记密码了？</a>
-                    <button th:id="btn_login" class="btn btn-success btn-block">登录</button>
-                </form>
-            </div>
-        </div>
-        <div class="signup-footer">
-            <div class="pull-left">
-                &copy; hAdmin
-            </div>
-        </div>
-    </div>
+	<div class="signinpanel">
+		<div class="row">
+			<div class="col-sm-12">
+				<form method="post" action="login" id="form_login">
+					<h4 class="no-margins">登录：</h4>
+					<p class="m-t-md">登录到H+后台主题UI框架</p>
+					<input type="text" class="form-control uname" placeholder="用户名"
+						th:name="username" /> <input type="password"
+						class="form-control pword m-b" placeholder="密码" th:name="password" />
+					<a href="">忘记密码了？</a>
+					<button th:id="btn_login" class="btn btn-success btn-block">登录</button>
+				</form>
+			</div>
+		</div>
+		<div class="signup-footer">
+			<div class="pull-left">&copy; hAdmin</div>
+		</div>
+	</div>
 </body>
 
 </html>

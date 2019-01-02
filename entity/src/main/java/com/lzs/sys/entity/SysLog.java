@@ -22,7 +22,7 @@ import lombok.Data;
 public class SysLog {
 	@Id
 	@Column(name="id" ,unique=true,nullable=false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String url;
 	private String class_method;

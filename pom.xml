@@ -29,9 +29,8 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<!--s引用高版本thymeleaf 和 thymeleaf方言-->
-		<!-- <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-		<thymeleaf-layout-dialect.version>2.0.5</thymeleaf-layout-dialect.version> -->
+		<!--s引用高版本thymeleaf 和 thymeleaf方言 -->
+		<!-- <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version> <thymeleaf-layout-dialect.version>2.0.5</thymeleaf-layout-dialect.version> -->
 	</properties>
 
 
@@ -95,7 +94,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
-		
+
 		<!--s 因为每个实体类都应该包含getter和setter方法才有意义。但是getter和setter方法的代码过于冗余， 属于模板类型代码，影响代码阅读。 
 			@Setter和@Getter两个注解是属于[lombok][6]的，在pom.xml文件中添加依赖引入lombok： -->
 		<dependency>
@@ -136,6 +135,11 @@
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-ehcache</artifactId>
 			<version>1.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.4.8</version>
 		</dependency>
 	</dependencies>
 

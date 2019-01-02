@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -26,8 +28,10 @@ import com.lzs.sys.service.SysUserService;
  */
 @Controller
 @RequestMapping(value="/user")
-public class SysUserController {
+public class SysUserController extends BaseController{
 
+	private final Logger logger  = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	SysUserService sysUserService;
 	@Autowired
@@ -53,20 +57,13 @@ public class SysUserController {
 	 */
 	@RequiresPermissions(value= {"user:manager"})
 	@ResponseBody
-	@RequestMapping("/getAdmin")
-	public Map<String, Object> getAdmin(@RequestParam(value="search")String search, SysUser user,
-			@RequestParam(value="order",required=false, defaultValue="asc")String order, 
-			@RequestParam(value="offset", defaultValue="0")Integer offset, 
-			@RequestParam(value="limit", defaultValue="10")Integer pageSize,
-			HttpServletRequest request) {
+	@RequestMapping("/getUser")
+	public Page<SysUser> getAdmin(@RequestParam(value="search", required=false)String search, SysUser user,
+			@RequestParam(value="order", required=false, defaultValue="asc")String order){
 		
-		
-		Page<SysUser> page =  sysUserService.getAllAdmin(user,order,offset,pageSize);
-		Map<String,Object> response = new HashMap<>();
-		response.put("total", page.getTotalElements());
-		response.put("rows", page.getContent());
-		return response;
-		
+		logger.info("后台查询所有用户 /getUser");
+		Page<SysUser> page =  sysUserService.getAllUser(user,getPageRequest(order,"id"));
+		return page;
 	}
 	
 	

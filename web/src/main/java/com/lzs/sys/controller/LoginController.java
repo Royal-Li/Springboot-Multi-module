@@ -56,7 +56,7 @@ public class LoginController {
 			subject.login(token);
 			SysUser loginUser = (SysUser) subject.getPrincipal();
 			request.getSession().setAttribute("LoginUser", loginUser);
-			System.out.println("+++++++++++++++++++"+request.getSession().getId());
+			System.out.println("Session Id 是："+request.getSession().getId());
 			return "/main";
 		} catch (AuthenticationException e) {
 			model.put("message", e.getMessage());

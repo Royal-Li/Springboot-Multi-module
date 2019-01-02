@@ -31,32 +31,24 @@ public class SysUserServiceImpl implements SysUserService {
 
 	@Autowired
 	SysUserRepository sysUserRepository;
-	
 
 	@Override
-	public Page<SysUser> getAllAdmin(SysUser user, String order, Integer offset, Integer pageSize) {
-		
+	public Page<SysUser> getAllUser(SysUser user, PageRequest pageRequest) {
 		// JPA实例查询
-		ExampleMatcher matcher =ExampleMatcher.matching().withIgnoreCase("roles");
+		ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase("roles");
 		Example<SysUser> example = Example.of(user, matcher);
-		
-		int pageNum = offset/pageSize;
-		Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.ASC,"id");
-		
-		return sysUserRepository.findAll(example,pageable);
+		return sysUserRepository.findAll(example, pageRequest);
 	}
-
 
 	@Override
 	public void add(SysUser user1) {
 		SysUser user = sysUserRepository.save(user1);
-		
-	}
 
+	}
 
 	@Override
 	public SysUser findByName(String name) {
-		
+
 		return sysUserRepository.findByName(name);
 	}
 
